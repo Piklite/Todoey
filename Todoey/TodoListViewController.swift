@@ -11,9 +11,16 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    
+    //Creating an array that will contain the data in the local storage
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Retrieve Data from local storage (defaults)
+        if let items = defaults.array(forKey: "TodoListArray") as? [String]{
+            itemArray = items
+        }
     }
 
     //MARK - Tableview Datasource Methods
@@ -55,6 +62,9 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             //Append the new item to the array
             self.itemArray.append(textField.text!)
+            
+            //Adding the data to the array defaults
+            self.defaults.setValue(self.itemArray, forKey: "TodoListArray")
             
             //Reload the tableview to update the UI with the new data
             self.tableView.reloadData()
